@@ -2,6 +2,7 @@ package com.nutrisport.di
 
 import com.nutrisport.auth.AuthViewModel
 import com.nutrisport.home.HomeGraphViewModel
+import com.nutrisport.profile.ProfileViewModel
 import com.nutrisport.data.CustomerRepositoryImpl
 import com.nutrisport.data.domain.CustomerRepository
 import org.koin.core.KoinApplication
@@ -13,6 +14,7 @@ val sharedModule = module {
     single<CustomerRepository> { CustomerRepositoryImpl() }
     viewModelOf(::AuthViewModel)
     viewModelOf(::HomeGraphViewModel)
+    viewModelOf(::ProfileViewModel)
 }
 
 fun initializeKoin(
