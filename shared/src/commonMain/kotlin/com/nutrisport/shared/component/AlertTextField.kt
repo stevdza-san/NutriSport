@@ -41,7 +41,7 @@ fun AlertTextField(
             .clip(RoundedCornerShape(6.dp))
             .clickable { onClick() }
             .padding(
-                vertical = 20.dp,
+                vertical = 16.dp,
                 horizontal = 16.dp
             ),
         verticalAlignment = Alignment.CenterVertically

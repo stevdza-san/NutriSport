@@ -12,7 +12,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -58,7 +57,6 @@ fun CustomTextField(
         placeholder = if (placeholder != null) {
             {
                 Text(
-                    modifier = Modifier.alpha(Alpha.HALF),
                     text = placeholder,
                     fontSize = FontSize.REGULAR
                 )

@@ -50,6 +50,7 @@ import com.nutrisport.shared.SurfaceSecondary
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
 import com.nutrisport.shared.component.CustomTextField
+import com.nutrisport.shared.component.ErrorCard
 import com.nutrisport.shared.domain.Country
 import org.jetbrains.compose.resources.painterResource
 
@@ -99,20 +100,27 @@ fun CountryPickerDialog(
                     placeholder = "Dial Code"
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    items(
-                        items = filteredCountries,
-                        key = { it.ordinal }
-                    ) { country ->
-                        CountryPicker(
-                            country = country,
-                            isSelected = selectedCountry == country,
-                            onSelect = { selectedCountry = country }
-                        )
+                if (filteredCountries.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(
+                            items = filteredCountries,
+                            key = { it.ordinal }
+                        ) { country ->
+                            CountryPicker(
+                                country = country,
+                                isSelected = selectedCountry == country,
+                                onSelect = { selectedCountry = country }
+                            )
+                        }
                     }
+                } else {
+                    ErrorCard(
+                        modifier = Modifier.weight(1f),
+                        message = "Dial code not found."
+                    )
                 }
             }
         },
