@@ -81,6 +81,43 @@ class CustomerRepositoryImpl : CustomerRepository {
         }
     }
 
+    override suspend fun updateCustomer(
+        customer: Customer,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit,
+    ) {
+        try {
+            val userId = getCurrentUserId()
+            if (userId != null) {
+                val firestore = Firebase.firestore
+                val customerCollection = firestore.collection(collectionPath = "customer")
+
+                val existingCustomer = customerCollection
+                    .document(customer.id)
+                    .get()
+                if (existingCustomer.exists) {
+                    customerCollection
+                        .document(customer.id)
+                        .update(
+                            "firstName" to customer.firstName,
+                            "lastName" to customer.lastName,
+                            "city" to customer.city,
+                            "postalCode" to customer.postalCode,
+                            "address" to customer.address,
+                            "phoneNumber" to customer.phoneNumber
+                        )
+                    onSuccess()
+                } else {
+                    onError("Customer not found.")
+                }
+            } else {
+                onError("User is not available.")
+            }
+        } catch (e: Exception) {
+            onError("Error while updating a Customer information: ${e.message}")
+        }
+    }
+
     override suspend fun signOut(): RequestState<Unit> {
         return try {
             Firebase.auth.signOut()

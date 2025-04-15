@@ -1,5 +1,6 @@
 package com.nutrisport.profile
 
+import ContentWithMessageBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import com.nutrisport.shared.component.ProfileForm
 import com.nutrisport.shared.util.DisplayResult
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import rememberMessageBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +39,8 @@ fun ProfileScreen(
     val viewModel = koinViewModel<ProfileViewModel>()
     val screenReady = viewModel.screenReady
     val screenState = viewModel.screenState
+    val isFormValid = viewModel.isFormValid
+    val messageBarState = rememberMessageBarState()
 
     Scaffold(
         containerColor = Surface,
@@ -69,57 +73,74 @@ fun ProfileScreen(
             )
         }
     ) { padding ->
-        Column(
+        ContentWithMessageBar(
+            contentBackgroundColor = Surface,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(
                     top = padding.calculateTopPadding(),
                     bottom = padding.calculateBottomPadding()
-                )
-                .padding(horizontal = 24.dp)
-                .padding(
-                    top = 12.dp,
-                    bottom = 24.dp
-                )
+                ),
+            messageBarState = messageBarState,
+            errorMaxLines = 2
         ) {
-            screenReady.DisplayResult(
-                onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
-                onSuccess = {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        ProfileForm(
-                            modifier = Modifier.weight(1f),
-                            country = screenState.country,
-                            onCountrySelect = viewModel::updateCountry,
-                            firstName = screenState.firstName,
-                            onFirstNameChange = viewModel::updateFirstName,
-                            lastName = screenState.lastName,
-                            onLastNameChange = viewModel::updateLastName,
-                            email = screenState.email,
-                            city = screenState.city,
-                            onCityChange = viewModel::updateCity,
-                            postalCode = screenState.postalCode,
-                            onPostalCodeChange = viewModel::updatePostalCode,
-                            address = screenState.address,
-                            onAddressChange = viewModel::updateAddress,
-                            phoneNumber = screenState.phoneNumber?.number,
-                            onPhoneNumberChange = viewModel::updatePhoneNumber
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        PrimaryButton(
-                            text = "Update",
-                            icon = Resources.Icon.Checkmark,
-                            onClick = {}
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
+                    .padding(
+                        top = 12.dp,
+                        bottom = 24.dp
+                    )
+            ) {
+                screenReady.DisplayResult(
+                    onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
+                    onSuccess = {
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            ProfileForm(
+                                modifier = Modifier.weight(1f),
+                                country = screenState.country,
+                                onCountrySelect = viewModel::updateCountry,
+                                firstName = screenState.firstName,
+                                onFirstNameChange = viewModel::updateFirstName,
+                                lastName = screenState.lastName,
+                                onLastNameChange = viewModel::updateLastName,
+                                email = screenState.email,
+                                city = screenState.city,
+                                onCityChange = viewModel::updateCity,
+                                postalCode = screenState.postalCode,
+                                onPostalCodeChange = viewModel::updatePostalCode,
+                                address = screenState.address,
+                                onAddressChange = viewModel::updateAddress,
+                                phoneNumber = screenState.phoneNumber?.number,
+                                onPhoneNumberChange = viewModel::updatePhoneNumber
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            PrimaryButton(
+                                text = "Update",
+                                icon = Resources.Icon.Checkmark,
+                                enabled = isFormValid,
+                                onClick = {
+                                    viewModel.updateCustomer(
+                                        onSuccess = {
+                                            messageBarState.addSuccess("Successfully updated!")
+                                        },
+                                        onError = { message ->
+                                            messageBarState.addError(message)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    },
+                    onError = { message ->
+                        ErrorCard(
+                            modifier = Modifier.fillMaxSize(),
+                            message = message,
+                            fontSize = FontSize.REGULAR
                         )
                     }
-                },
-                onError = { message ->
-                    ErrorCard(
-                        modifier = Modifier.fillMaxSize(),
-                        message = message,
-                        fontSize = FontSize.REGULAR
-                    )
-                }
-            )
+                )
+            }
         }
     }
 }
