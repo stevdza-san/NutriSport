@@ -9,9 +9,7 @@ import com.nutrisport.data.domain.CustomerRepository
 import com.nutrisport.shared.domain.Country
 import com.nutrisport.shared.domain.PhoneNumber
 import com.nutrisport.shared.util.RequestState
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class ProfileScreenState(
@@ -22,26 +20,19 @@ data class ProfileScreenState(
     val postalCode: Int? = null,
     val address: String? = null,
     val country: Country = Country.Serbia,
-    val phoneNumber: PhoneNumber? = null,
+    val phoneNumber: PhoneNumber? = null
 )
 
 class ProfileViewModel(
     private val customerRepository: CustomerRepository,
 ) : ViewModel() {
-    private val customer = customerRepository.readCustomerFlow()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = RequestState.Loading
-        )
-
     var screenReady: RequestState<Unit> by mutableStateOf(RequestState.Loading)
     var screenState: ProfileScreenState by mutableStateOf(ProfileScreenState())
         private set
 
     init {
         viewModelScope.launch {
-            customer.collectLatest { data ->
+            customerRepository.readCustomerFlow().collectLatest { data ->
                 if (data.isSuccess()) {
                     val fetchedCustomer = data.getSuccessData()
                     screenState = ProfileScreenState(
