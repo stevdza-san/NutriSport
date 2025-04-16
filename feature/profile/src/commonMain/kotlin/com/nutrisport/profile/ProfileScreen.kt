@@ -22,7 +22,7 @@ import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.Surface
 import com.nutrisport.shared.TextPrimary
-import com.nutrisport.shared.component.ErrorCard
+import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.component.ProfileForm
@@ -133,10 +133,10 @@ fun ProfileScreen(
                         }
                     },
                     onError = { message ->
-                        ErrorCard(
-                            modifier = Modifier.fillMaxSize(),
-                            message = message,
-                            fontSize = FontSize.REGULAR
+                        InfoCard(
+                            image = Resources.Image.Cat,
+                            title = "Oops!",
+                            subtitle = message
                         )
                     }
                 )
