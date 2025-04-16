@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -91,6 +92,7 @@ fun ProfileScreen(
                         top = 12.dp,
                         bottom = 24.dp
                     )
+                    .imePadding()
             ) {
                 screenReady.DisplayResult(
                     onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
