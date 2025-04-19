@@ -43,6 +43,7 @@ kotlin {
             implementation(project(":feature:auth"))
             implementation(project(":feature:home"))
             implementation(project(":feature:profile"))
+            implementation(project(":feature:admin_panel:manage_product"))
             implementation(project(":data"))
         }
     }
