@@ -5,6 +5,11 @@ import com.nutrisport.shared.domain.Product
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
+import dev.gitlive.firebase.storage.File
+import dev.gitlive.firebase.storage.storage
+import kotlinx.coroutines.withTimeout
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class AdminRepositoryImpl : AdminRepository {
     override fun getCurrentUserId() = Firebase.auth.currentUser?.uid
@@ -28,4 +33,21 @@ class AdminRepositoryImpl : AdminRepository {
             onError("Error while creating a new product: ${e.message}")
         }
     }
+
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun uploadImageToStorage(file: File): String? {
+        return if (getCurrentUserId() != null) {
+            val storage = Firebase.storage.reference
+            val imagePath = storage.child(path = "images/${Uuid.random().toHexString()}")
+            try {
+                withTimeout(timeMillis = 20000L) {
+                    imagePath.putFile(file)
+                    imagePath.getDownloadUrl()
+                }
+            } catch (e: Exception) {
+                null
+            }
+        } else null
+    }
+
 }
