@@ -50,7 +50,7 @@ fun CategoriesDialog(
         containerColor = Surface,
         title = {
             Text(
-                text = "Pick a Category",
+                text = "Select a Category",
                 fontSize = FontSize.EXTRA_MEDIUM,
                 color = TextPrimary
             )
