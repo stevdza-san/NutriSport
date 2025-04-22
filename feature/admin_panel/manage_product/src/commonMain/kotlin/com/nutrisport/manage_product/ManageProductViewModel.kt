@@ -87,7 +87,7 @@ class ManageProductViewModel(
                     category = screenState.category.name,
                     flavors = screenState.flavors.split(","),
                     weight = screenState.weight,
-                    screenState.price
+                    price = screenState.price
                 ),
                 onSuccess = onSuccess,
                 onError = onError

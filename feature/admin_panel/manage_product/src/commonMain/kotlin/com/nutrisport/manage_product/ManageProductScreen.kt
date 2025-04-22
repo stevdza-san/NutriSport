@@ -60,6 +60,7 @@ import com.nutrisport.shared.component.ErrorCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.component.dialog.CategoriesDialog
+import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.DisplayResult
 import com.nutrisport.shared.util.RequestState
 import org.jetbrains.compose.resources.painterResource
@@ -279,19 +280,26 @@ fun ManageProductScreen(
                         text = screenState.category.title,
                         onClick = { showCategoriesDialog = true }
                     )
-                    CustomTextField(
-                        value = "${screenState.weight ?: ""}",
-                        onValueChange = { viewModel.updateWeight(it.toIntOrNull() ?: 0) },
-                        placeholder = "Weight (Optional)",
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number
-                        )
-                    )
-                    CustomTextField(
-                        value = screenState.flavors,
-                        onValueChange = viewModel::updateFlavors,
-                        placeholder = "Flavors (Optional)"
-                    )
+                    AnimatedVisibility(
+                        visible = screenState.category != ProductCategory.Accessories
+                    ) {
+                        Column {
+                            CustomTextField(
+                                value = "${screenState.weight ?: ""}",
+                                onValueChange = { viewModel.updateWeight(it.toIntOrNull() ?: 0) },
+                                placeholder = "Weight",
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Number
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            CustomTextField(
+                                value = screenState.flavors,
+                                onValueChange = viewModel::updateFlavors,
+                                placeholder = "Flavors"
+                            )
+                        }
+                    }
                     CustomTextField(
                         value = "${screenState.price}",
                         onValueChange = { value ->

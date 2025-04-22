@@ -1,5 +1,10 @@
 package com.nutrisport.admin_panel
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -9,6 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.nutrisport.shared.BebasNeueFont
 import com.nutrisport.shared.ButtonPrimary
 import com.nutrisport.shared.FontSize
@@ -16,7 +25,12 @@ import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.Surface
 import com.nutrisport.shared.TextPrimary
+import com.nutrisport.shared.component.InfoCard
+import com.nutrisport.shared.component.LoadingCard
+import com.nutrisport.shared.component.ProductCard
+import com.nutrisport.shared.util.DisplayResult
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +38,13 @@ fun AdminPanelScreen(
     navigateBack: () -> Unit,
     navigateToManageProduct: (String?) -> Unit,
 ) {
+    val viewModel = koinViewModel<AdminPanelViewModel>()
+    val products = viewModel.products.collectAsState()
+
+    LaunchedEffect(products.value) {
+        println(products.value)
+    }
+
     Scaffold(
         containerColor = Surface,
         topBar = {
@@ -76,7 +97,39 @@ fun AdminPanelScreen(
                 }
             )
         }
-    ) {
-
+    ) { padding ->
+        products.value.DisplayResult(
+            modifier = Modifier
+                .padding(
+                    top = padding.calculateTopPadding(),
+                    bottom = padding.calculateBottomPadding()
+                ),
+            onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
+            onSuccess = { lastProducts ->
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(all = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(
+                        items = lastProducts,
+                        key = { it.id }
+                    ) { product ->
+                        ProductCard(
+                            product = product,
+                            onClick = {}
+                        )
+                    }
+                }
+            },
+            onError = { message ->
+                InfoCard(
+                    image = Resources.Image.Cat,
+                    title = "Oops!",
+                    subtitle = message
+                )
+            }
+        )
     }
 }
