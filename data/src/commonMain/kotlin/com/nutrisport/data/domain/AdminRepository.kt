@@ -31,4 +31,9 @@ interface AdminRepository {
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     )
+    suspend fun deleteProduct(
+        productId: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    )
 }
