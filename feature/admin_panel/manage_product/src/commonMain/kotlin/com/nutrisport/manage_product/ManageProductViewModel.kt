@@ -28,6 +28,9 @@ data class ManageProductState(
     val flavors: String = "",
     val weight: Int? = null,
     val price: Double = 0.0,
+    val isNew: Boolean = false,
+    val isPopular: Boolean = false,
+    val isDiscounted: Boolean = false
 )
 
 class ManageProductViewModel(
@@ -65,6 +68,9 @@ class ManageProductViewModel(
                     updateFlavors(product.flavors?.joinToString(",") ?: "")
                     updateWeight(product.weight)
                     updatePrice(product.price)
+                    updateNew(product.isNew)
+                    updatePopular(product.isPopular)
+                    updateDiscounted(product.isDiscounted)
                 }
             }
         }
@@ -110,6 +116,18 @@ class ManageProductViewModel(
         screenState = screenState.copy(price = value)
     }
 
+    fun updateNew(value: Boolean) {
+        screenState = screenState.copy(isNew = value)
+    }
+
+    fun updatePopular(value: Boolean) {
+        screenState = screenState.copy(isPopular = value)
+    }
+
+    fun updateDiscounted(value: Boolean) {
+        screenState = screenState.copy(isDiscounted = value)
+    }
+
     fun createNewProduct(
         onSuccess: () -> Unit,
         onError: (String) -> Unit,
@@ -124,7 +142,10 @@ class ManageProductViewModel(
                     category = screenState.category.name,
                     flavors = screenState.flavors.split(","),
                     weight = screenState.weight,
-                    price = screenState.price
+                    price = screenState.price,
+                    isNew = screenState.isNew,
+                    isPopular = screenState.isPopular,
+                    isDiscounted = screenState.isDiscounted
                 ),
                 onSuccess = onSuccess,
                 onError = onError
@@ -193,7 +214,10 @@ class ManageProductViewModel(
                             .map { it.trim() }
                             .filter { it.isNotEmpty() },
                         weight = screenState.weight,
-                        price = screenState.price
+                        price = screenState.price,
+                        isNew = screenState.isNew,
+                        isPopular = screenState.isPopular,
+                        isDiscounted = screenState.isDiscounted
                     ),
                     onSuccess = onSuccess,
                     onError = onError
