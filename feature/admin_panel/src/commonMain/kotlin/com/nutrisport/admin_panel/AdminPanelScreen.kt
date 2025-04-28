@@ -83,8 +83,8 @@ fun AdminPanelScreen(
                                     IconButton(
                                         modifier = Modifier.size(14.dp),
                                         onClick = {
-                                            viewModel.updateSearchQuery("")
-                                            searchBarVisible = false
+                                            if (searchQuery.isNotEmpty()) viewModel.updateSearchQuery("")
+                                            else searchBarVisible = false
                                         }
                                     ) {
                                         Icon(
