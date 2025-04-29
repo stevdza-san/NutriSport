@@ -43,10 +43,10 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nutrisport.shared.Alpha
 import com.nutrisport.shared.FontSize
+import com.nutrisport.shared.IconWhite
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.RobotoCondensedFont
 import com.nutrisport.shared.TextBrand
-import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
@@ -56,7 +56,7 @@ import org.jetbrains.compose.resources.painterResource
 fun MainProductCard(
     modifier: Modifier = Modifier,
     product: Product,
-    isVisible: Boolean = false,
+    isLarge: Boolean = false,
     onClick: (String) -> Unit
 ) {
     val infiniteTransition = rememberInfiniteTransition()
@@ -81,15 +81,15 @@ fun MainProductCard(
     Box(
         modifier = modifier
             .fillMaxHeight()
+            .clip(RoundedCornerShape(size = 12.dp))
             .clickable { onClick(product.id) }
     ) {
         AsyncImage(
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(size = 12.dp))
                 .animateContentSize()
                 .then(
-                    if (isVisible) Modifier
+                    if (isLarge) Modifier
                         .scale(animatedScale.value)
                         .rotate(animatedRotation.value)
                     else Modifier
@@ -134,6 +134,7 @@ fun MainProductCard(
             Text(
                 text = product.description,
                 fontSize = FontSize.REGULAR,
+                lineHeight = FontSize.REGULAR * 1.3f,
                 color = TextWhite.copy(alpha = Alpha.HALF),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
@@ -156,13 +157,14 @@ fun MainProductCard(
                             Icon(
                                 modifier = Modifier.size(14.dp),
                                 painter = painterResource(Resources.Icon.Weight),
-                                contentDescription = "Weight icon"
+                                contentDescription = "Weight icon",
+                                tint = IconWhite
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = "${product.weight}g",
                                 fontSize = FontSize.EXTRA_SMALL,
-                                color = TextPrimary
+                                color = TextWhite
                             )
                         }
                     }
