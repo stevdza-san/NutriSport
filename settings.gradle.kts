@@ -32,6 +32,7 @@ include(":di")
 include(":feature:admin_panel")
 include(":feature:admin_panel:manage_product")
 
+include(":feature:home:products_overview")
 include(":feature:home")
 include(":feature:profile")
 include(":feature:auth")
