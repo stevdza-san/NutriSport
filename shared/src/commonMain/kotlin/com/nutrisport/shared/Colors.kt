@@ -27,6 +27,7 @@ val SurfaceSecondary = Orange
 
 val BorderIdle = GrayDarker
 val BorderError = Red
+val BorderSecondary = Orange
 
 val TextPrimary = Black
 val TextSecondary = Orange

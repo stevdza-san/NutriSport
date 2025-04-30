@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
 
             implementation(project(":feature:auth"))
+            implementation(project(":feature:details"))
             implementation(project(":feature:home"))
             implementation(project(":feature:profile"))
             implementation(project(":feature:admin_panel"))

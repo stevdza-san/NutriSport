@@ -5,6 +5,7 @@ import com.nutrisport.data.AdminRepositoryImpl
 import com.nutrisport.home.HomeGraphViewModel
 import com.nutrisport.profile.ProfileViewModel
 import com.nutrisport.admin_panel.AdminPanelViewModel
+import com.nutrisport.details.DetailsViewModel
 import com.nutrisport.manage_product.ManageProductViewModel
 import com.nutrisport.products_overview.ProductsOverviewViewModel
 import com.nutrisport.data.CustomerRepositoryImpl
@@ -28,6 +29,7 @@ val sharedModule = module {
     viewModelOf(::ManageProductViewModel)
     viewModelOf(::AdminPanelViewModel)
     viewModelOf(::ProductsOverviewViewModel)
+    viewModelOf(::DetailsViewModel)
 }
 
 expect val targetModule: Module
