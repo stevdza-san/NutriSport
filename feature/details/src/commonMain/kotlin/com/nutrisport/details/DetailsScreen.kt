@@ -57,6 +57,8 @@ import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.component.PrimaryButton
+import com.nutrisport.shared.component.QuantityCounter
+import com.nutrisport.shared.domain.QuantityCounterSize
 import com.nutrisport.shared.util.DisplayResult
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +67,7 @@ fun DetailsScreen(navigateBack: () -> Unit) {
     val messageBarState = rememberMessageBarState()
     val viewModel = koinViewModel<DetailsViewModel>()
     val product by viewModel.product.collectAsState()
+    val quantity = viewModel.quantity
 
     Scaffold(
         containerColor = Surface,
@@ -86,6 +89,19 @@ fun DetailsScreen(navigateBack: () -> Unit) {
                             tint = IconPrimary
                         )
                     }
+                },
+                actions = {
+                    QuantityCounter(
+                        size = QuantityCounterSize.Large,
+                        value = quantity.toString(),
+                        onMinusClick = {
+                            if (quantity > 1) viewModel.updateQuantity(quantity - 1)
+                        },
+                        onPlusClick = {
+                            if (quantity < 10) viewModel.updateQuantity(quantity + 1)
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Surface,
