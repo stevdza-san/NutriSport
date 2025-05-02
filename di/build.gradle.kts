@@ -47,6 +47,7 @@ kotlin {
             implementation(project(":feature:admin_panel"))
             implementation(project(":feature:admin_panel:manage_product"))
             implementation(project(":feature:home:products_overview"))
+            implementation(project(":feature:home:cart"))
             implementation(project(":data"))
         }
     }

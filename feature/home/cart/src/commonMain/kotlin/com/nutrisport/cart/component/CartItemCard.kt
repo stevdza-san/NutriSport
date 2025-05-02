@@ -8,14 +8,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +56,7 @@ fun CartItemCard(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .height(120.dp)
             .clip(RoundedCornerShape(size = 12.dp))
             .background(SurfaceLighter)
     ) {
@@ -77,7 +79,7 @@ fun CartItemCard(
         )
         Column(
             modifier = Modifier
-                .weight(1f)
+                .fillMaxSize()
                 .padding(all = 12.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -86,6 +88,7 @@ fun CartItemCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
+                    modifier = Modifier.weight(1f),
                     text = product.title,
                     fontFamily = RobotoCondensedFont(),
                     fontSize = FontSize.MEDIUM,
@@ -109,7 +112,7 @@ fun CartItemCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(14.dp),
                         painter = painterResource(Resources.Icon.Delete),
                         contentDescription = "Delete icon",
                         tint = IconPrimary
@@ -121,7 +124,7 @@ fun CartItemCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "${product.price}",
+                    text = "$${product.price}",
                     fontSize = FontSize.EXTRA_REGULAR,
                     color = TextSecondary,
                     fontWeight = FontWeight.Medium,
