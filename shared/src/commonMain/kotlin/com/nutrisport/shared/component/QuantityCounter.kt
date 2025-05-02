@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.nutrisport.shared.Constants.MAX_QUANTITY
+import com.nutrisport.shared.Constants.MIN_QUANTITY
 import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.Resources
@@ -29,9 +31,9 @@ import org.jetbrains.compose.resources.painterResource
 fun QuantityCounter(
     modifier: Modifier = Modifier,
     size: QuantityCounterSize,
-    value: String,
-    onMinusClick: () -> Unit,
-    onPlusClick: () -> Unit,
+    value: Int,
+    onMinusClick: (Int) -> Unit,
+    onPlusClick: (Int) -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -42,7 +44,7 @@ fun QuantityCounter(
             modifier = Modifier
                 .clip(RoundedCornerShape(size = 6.dp))
                 .background(SurfaceBrand)
-                .clickable { onMinusClick() }
+                .clickable { if (value.toInt() > MIN_QUANTITY) onMinusClick(value - 1) }
                 .padding(size.padding),
             contentAlignment = Alignment.Center
         ) {
@@ -72,7 +74,7 @@ fun QuantityCounter(
             modifier = Modifier
                 .clip(RoundedCornerShape(size = 6.dp))
                 .background(SurfaceBrand)
-                .clickable { onPlusClick() }
+                .clickable { if (value < MAX_QUANTITY) onPlusClick(value + 1) }
                 .padding(size.padding),
             contentAlignment = Alignment.Center
         ) {

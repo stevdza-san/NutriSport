@@ -49,8 +49,8 @@ fun CartItemCard(
     modifier: Modifier = Modifier,
     product: Product,
     cartItem: CartItem,
-    onMinusClick: () -> Unit,
-    onPlusClick: () -> Unit,
+    onMinusClick: (Int) -> Unit,
+    onPlusClick: (Int) -> Unit,
     onDeleteClick: () -> Unit,
 ) {
     Row(
@@ -132,7 +132,7 @@ fun CartItemCard(
                 )
                 QuantityCounter(
                     size = QuantityCounterSize.Small,
-                    value = "${cartItem.quantity}",
+                    value = cartItem.quantity,
                     onMinusClick = onMinusClick,
                     onPlusClick = onPlusClick
                 )

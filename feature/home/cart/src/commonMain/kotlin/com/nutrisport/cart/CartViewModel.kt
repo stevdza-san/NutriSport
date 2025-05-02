@@ -1,6 +1,7 @@
 package com.nutrisport.cart
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nutrisport.data.domain.CustomerRepository
 import com.nutrisport.data.domain.ProductRepository
 import com.nutrisport.shared.util.RequestState
@@ -8,6 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 class CartViewModel(
     private val customerRepository: CustomerRepository,
@@ -45,6 +47,22 @@ class CartViewModel(
             productsState.isError() -> RequestState.Error(productsState.getErrorMessage())
 
             else -> RequestState.Loading
+        }
+    }
+
+    fun updateCartItemQuantity(
+        id: String,
+        quantity: Int,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit,
+    ) {
+        viewModelScope.launch {
+            customerRepository.updateCartItemQuantity(
+                id = id,
+                quantity = quantity,
+                onSuccess = onSuccess,
+                onError = onError
+            )
         }
     }
 }
