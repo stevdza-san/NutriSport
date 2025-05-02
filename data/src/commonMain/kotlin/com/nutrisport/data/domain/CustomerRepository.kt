@@ -1,5 +1,6 @@
 package com.nutrisport.data.domain
 
+import com.nutrisport.shared.domain.CartItem
 import com.nutrisport.shared.domain.Customer
 import com.nutrisport.shared.util.RequestState
 import dev.gitlive.firebase.auth.FirebaseUser
@@ -15,6 +16,11 @@ interface CustomerRepository {
     fun readCustomerFlow(): Flow<RequestState<Customer>>
     suspend fun updateCustomer(
         customer: Customer,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    )
+    suspend fun addItemToCard(
+        cartItem: CartItem,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     )
