@@ -44,7 +44,7 @@ fun QuantityCounter(
             modifier = Modifier
                 .clip(RoundedCornerShape(size = 6.dp))
                 .background(SurfaceBrand)
-                .clickable { if (value.toInt() > MIN_QUANTITY) onMinusClick(value - 1) }
+                .clickable { if (value > MIN_QUANTITY) onMinusClick(value - 1) }
                 .padding(size.padding),
             contentAlignment = Alignment.Center
         ) {

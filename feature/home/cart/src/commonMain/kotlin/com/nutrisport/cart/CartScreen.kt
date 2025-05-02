@@ -68,7 +68,13 @@ fun CartScreen() {
                                         onError = { messageBarState.addError(it) }
                                     )
                                 },
-                                onDeleteClick = {}
+                                onDeleteClick = {
+                                    viewModel.deleteCartItem(
+                                        id = pair.first.id,
+                                        onSuccess = {},
+                                        onError = { messageBarState.addError(it) }
+                                    )
+                                }
                             )
                         }
                     }
