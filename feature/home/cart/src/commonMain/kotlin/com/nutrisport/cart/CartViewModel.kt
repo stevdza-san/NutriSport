@@ -22,7 +22,9 @@ class CartViewModel(
         .flatMapLatest { customerState ->
             if (customerState.isSuccess()) {
                 val productIds = customerState.getSuccessData().cart.map { it.productId }.toSet()
-                productRepository.readProductsByIdsFlow(productIds.toList())
+                if (productIds.isNotEmpty()) {
+                    productRepository.readProductsByIdsFlow(productIds.toList())
+                } else flowOf(RequestState.Success(emptyList()))
             } else if (customerState.isError()) {
                 flowOf(RequestState.Error(customerState.getErrorMessage()))
             } else flowOf(RequestState.Loading)
