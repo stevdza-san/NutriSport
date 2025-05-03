@@ -1,6 +1,9 @@
 package com.nutrisport.category_search
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +26,8 @@ import androidx.compose.runtime.collectAsState
 import com.nutrisport.shared.domain.ProductCategory
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nutrisport.shared.BebasNeueFont
@@ -47,58 +52,60 @@ fun CategorySearchScreen(
     navigateBack: () -> Unit,
 ) {
     val viewModel = koinViewModel<CategorySearchViewModel>()
-    val products by viewModel.products.collectAsState()
+    val filteredProducts by viewModel.filteredProducts.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    var searchBarVisible by mutableStateOf(false)
 
     Scaffold(
         containerColor = Surface,
         topBar = {
             AnimatedContent(
-                targetState = false
+                targetState = searchBarVisible
             ) { visible ->
                 if (visible) {
-//                    SearchBar(
-//                        modifier = Modifier
-//                            .padding(horizontal = 12.dp)
-//                            .fillMaxWidth(),
-//                        inputField = {
-//                            SearchBarDefaults.InputField(
-//                                modifier = Modifier.fillMaxWidth(),
-//                                query = searchQuery,
-//                                onQueryChange = viewModel::updateSearchQuery,
-//                                expanded = false,
-//                                onExpandedChange = {},
-//                                onSearch = {},
-//                                placeholder = {
-//                                    Text(
-//                                        text = "Search here",
-//                                        fontSize = FontSize.REGULAR,
-//                                        color = TextPrimary
-//                                    )
-//                                },
-//                                trailingIcon = {
-//                                    IconButton(
-//                                        modifier = Modifier.size(14.dp),
-//                                        onClick = {
-//                                            if (searchQuery.isNotEmpty()) viewModel.updateSearchQuery("")
-//                                            else searchBarVisible = false
-//                                        }
-//                                    ) {
-//                                        Icon(
-//                                            painter = painterResource(Resources.Icon.Close),
-//                                            contentDescription = "Close icon"
-//                                        )
-//                                    }
-//                                }
-//                            )
-//                        },
-//                        colors = SearchBarColors(
-//                            containerColor = SurfaceLighter,
-//                            dividerColor = BorderIdle
-//                        ),
-//                        expanded = false,
-//                        onExpandedChange = {},
-//                        content = {}
-//                    )
+                    SearchBar(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .fillMaxWidth(),
+                        inputField = {
+                            SearchBarDefaults.InputField(
+                                modifier = Modifier.fillMaxWidth(),
+                                query = searchQuery,
+                                onQueryChange = viewModel::updateSearchQuery,
+                                expanded = false,
+                                onExpandedChange = {},
+                                onSearch = {},
+                                placeholder = {
+                                    Text(
+                                        text = "Search here",
+                                        fontSize = FontSize.REGULAR,
+                                        color = TextPrimary
+                                    )
+                                },
+                                trailingIcon = {
+                                    IconButton(
+                                        modifier = Modifier.size(14.dp),
+                                        onClick = {
+                                            if (searchQuery.isNotEmpty()) viewModel.updateSearchQuery("")
+                                            else searchBarVisible = false
+                                        }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(Resources.Icon.Close),
+                                            contentDescription = "Close icon"
+                                        )
+                                    }
+                                }
+                            )
+                        },
+                        colors = SearchBarColors(
+                            containerColor = SurfaceLighter,
+                            dividerColor = BorderIdle
+                        ),
+                        expanded = false,
+                        onExpandedChange = {},
+                        content = {}
+                    )
                 } else {
                     TopAppBar(
                         title = {
@@ -119,9 +126,7 @@ fun CategorySearchScreen(
                             }
                         },
                         actions = {
-                            IconButton(onClick = {
-//                                searchBarVisible = true
-                            }) {
+                            IconButton(onClick = { searchBarVisible = true }) {
                                 Icon(
                                     painter = painterResource(Resources.Icon.Search),
                                     contentDescription = "Search icon",
@@ -141,7 +146,7 @@ fun CategorySearchScreen(
             }
         }
     ) { padding ->
-        products.DisplayResult(
+        filteredProducts.DisplayResult(
             modifier = Modifier
                 .padding(
                     top = padding.calculateTopPadding(),
@@ -184,7 +189,8 @@ fun CategorySearchScreen(
                     title = "Oops!",
                     subtitle = message
                 )
-            }
+            },
+            transitionSpec = fadeIn() togetherWith fadeOut()
         )
     }
 }
