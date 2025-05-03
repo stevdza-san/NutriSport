@@ -48,13 +48,14 @@ kotlin {
             implementation(project(":feature:admin_panel:manage_product"))
             implementation(project(":feature:home:products_overview"))
             implementation(project(":feature:home:cart"))
+            implementation(project(":feature:home:categories:category_search"))
             implementation(project(":data"))
         }
     }
 }
 
 android {
-    namespace = "com.stevdza_san.di"
+    namespace = "com.nutrisport.di"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

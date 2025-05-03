@@ -55,7 +55,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.stevdza_san.shared"
+    namespace = "com.nutrisport.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

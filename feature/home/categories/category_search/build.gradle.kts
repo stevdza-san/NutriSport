@@ -20,7 +20,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "admin_panel"
+            baseName = "category_search"
             isStatic = true
         }
     }
@@ -36,8 +36,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
-            implementation(libs.messagebar.kmp)
-
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
@@ -48,7 +46,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.nutrisport.admin_panel"
+    namespace = "com.nutrisport.category_search"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

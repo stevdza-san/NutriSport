@@ -20,7 +20,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "admin_panel"
+            baseName = "products_overview"
             isStatic = true
         }
     }
@@ -36,11 +36,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
-            implementation(libs.messagebar.kmp)
-
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-
             implementation(project(path = ":shared"))
             implementation(project(path = ":data"))
         }
@@ -48,7 +43,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.nutrisport.admin_panel"
+    namespace = "com.nutrisport.categories"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
