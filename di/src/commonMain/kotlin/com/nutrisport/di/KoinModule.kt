@@ -12,9 +12,11 @@ import com.nutrisport.cart.CartViewModel
 import com.nutrisport.manage_product.ManageProductViewModel
 import com.nutrisport.products_overview.ProductsOverviewViewModel
 import com.nutrisport.data.CustomerRepositoryImpl
+import com.nutrisport.data.OrderRepositoryImpl
 import com.nutrisport.data.ProductRepositoryImpl
 import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.data.domain.CustomerRepository
+import com.nutrisport.data.domain.OrderRepository
 import com.nutrisport.data.domain.ProductRepository
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
@@ -26,6 +28,7 @@ val sharedModule = module {
     single<CustomerRepository> { CustomerRepositoryImpl() }
     single<AdminRepository> { AdminRepositoryImpl() }
     single<ProductRepository> { ProductRepositoryImpl() }
+    single<OrderRepository> { OrderRepositoryImpl(get()) }
     viewModelOf(::AuthViewModel)
     viewModelOf(::HomeGraphViewModel)
     viewModelOf(::ProfileViewModel)

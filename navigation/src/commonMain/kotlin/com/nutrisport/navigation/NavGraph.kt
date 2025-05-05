@@ -12,6 +12,7 @@ import com.nutrisport.checkout.CheckoutScreen
 import com.nutrisport.details.DetailsScreen
 import com.nutrisport.home.HomeGraphScreen
 import com.nutrisport.manage_product.ManageProductScreen
+import com.nutrisport.payment_completed.PaymentCompleted
 import com.nutrisport.profile.ProfileScreen
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.navigation.Screen
@@ -107,6 +108,24 @@ fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
                 totalAmount = totalAmount.toDoubleOrNull() ?: 0.0,
                 navigateBack = {
                     navController.navigateUp()
+                },
+                navigateToPaymentCompleted = { isSuccess, error ->
+                    navController.navigate(Screen.PaymentCompleted(isSuccess, error))
+                }
+            )
+        }
+        composable<Screen.PaymentCompleted> {
+            val isSuccess = it.toRoute<Screen.PaymentCompleted>().isSuccess
+            val error = it.toRoute<Screen.PaymentCompleted>().error
+            PaymentCompleted(
+                isSuccess = isSuccess,
+                error = error,
+                navigateBack = {
+                    navController.navigate(Screen.HomeGraph) {
+                        launchSingleTop = true
+                        // Clear backstack completely
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }
