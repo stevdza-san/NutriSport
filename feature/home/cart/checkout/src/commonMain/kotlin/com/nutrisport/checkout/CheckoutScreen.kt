@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,7 +36,7 @@ import rememberMessageBarState
 fun CheckoutScreen(
     totalAmount: Double,
     navigateBack: () -> Unit,
-    navigateToPaymentCompleted: (Boolean?, String?) -> Unit
+    navigateToPaymentCompleted: (Boolean?, String?) -> Unit,
 ) {
     val messageBarState = rememberMessageBarState()
     val viewModel = koinViewModel<CheckoutViewModel>()
@@ -120,22 +121,40 @@ fun CheckoutScreen(
                     phoneNumber = screenState.phoneNumber?.number,
                     onPhoneNumberChange = viewModel::updatePhoneNumber
                 )
-                PrimaryButton(
-                    text = "Pay on Delivery",
-                    icon = Resources.Icon.ShoppingCart,
-                    secondary = true,
-                    enabled = isFormValid,
-                    onClick = {
-                        viewModel.payOnDelivery(
-                            onSuccess = {
-                                navigateToPaymentCompleted(true, null)
-                            },
-                            onError = { message ->
-                                navigateToPaymentCompleted(null, message)
-                            }
-                        )
-                    }
-                )
+                Column {
+                    PrimaryButton(
+                        text = "Pay with PayPal",
+                        icon = Resources.Image.PaypalLogo,
+                        enabled = isFormValid,
+                        onClick = {
+                            viewModel.payWithPayPal(
+                                onSuccess = {
+
+                                },
+                                onError = { message ->
+                                    messageBarState.addError(message)
+                                }
+                            )
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    PrimaryButton(
+                        text = "Pay on Delivery",
+                        icon = Resources.Icon.ShoppingCart,
+                        secondary = true,
+                        enabled = isFormValid,
+                        onClick = {
+                            viewModel.payOnDelivery(
+                                onSuccess = {
+                                    navigateToPaymentCompleted(true, null)
+                                },
+                                onError = { message ->
+                                    navigateToPaymentCompleted(null, message)
+                                }
+                            )
+                        }
+                    )
+                }
             }
         }
     }

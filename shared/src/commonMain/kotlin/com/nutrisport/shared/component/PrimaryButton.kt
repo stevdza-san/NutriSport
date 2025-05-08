@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nutrisport.shared.Alpha
@@ -49,7 +50,8 @@ fun PrimaryButton(
             Icon(
                 modifier = Modifier.size(14.dp),
                 painter = painterResource(icon),
-                contentDescription = "Button icon"
+                contentDescription = "Button icon",
+                tint = Color.Unspecified
             )
         }
         Spacer(modifier = Modifier.width(12.dp))

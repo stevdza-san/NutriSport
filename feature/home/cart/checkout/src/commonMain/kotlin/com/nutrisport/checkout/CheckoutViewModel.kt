@@ -6,7 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nutrisport.checkout.domain.Amount
 import com.nutrisport.checkout.domain.PaypalApi
+import com.nutrisport.checkout.domain.ShippingAddress
 import com.nutrisport.data.domain.CustomerRepository
 import com.nutrisport.data.domain.OrderRepository
 import com.nutrisport.shared.domain.CartItem
@@ -178,6 +180,35 @@ class CheckoutViewModel(
                 onSuccess = onSuccess,
                 onError = onError
             )
+        }
+    }
+
+    fun payWithPayPal(
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit,
+    ) {
+        val totalAmount = savedStateHandle.get<String>("totalAmount")
+        if (totalAmount != null) {
+            viewModelScope.launch {
+                paypalApi.beginCheckout(
+                    amount = Amount(
+                        currencyCode = "USD",
+                        value = totalAmount
+                    ),
+                    fullName = "${screenState.firstName} ${screenState.lastName}",
+                    shippingAddress = ShippingAddress(
+                        addressLine1 = screenState.address ?: "Unknown address",
+                        city = screenState.city ?: "Unknown city",
+                        state = screenState.country.name,
+                        postalCode = screenState.postalCode.toString(),
+                        countryCode = screenState.country.code
+                    ),
+                    onSuccess = onSuccess,
+                    onError = onError
+                )
+            }
+        } else {
+            onError("Total amount couldn't be calculated.")
         }
     }
 }
