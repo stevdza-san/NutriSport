@@ -9,6 +9,7 @@ import com.nutrisport.details.DetailsViewModel
 import com.nutrisport.category_search.CategorySearchViewModel
 import com.nutrisport.checkout.CheckoutViewModel
 import com.nutrisport.cart.CartViewModel
+import com.nutrisport.checkout.domain.PaypalApi
 import com.nutrisport.manage_product.ManageProductViewModel
 import com.nutrisport.products_overview.ProductsOverviewViewModel
 import com.nutrisport.data.CustomerRepositoryImpl
@@ -29,6 +30,7 @@ val sharedModule = module {
     single<AdminRepository> { AdminRepositoryImpl() }
     single<ProductRepository> { ProductRepositoryImpl() }
     single<OrderRepository> { OrderRepositoryImpl(get()) }
+    single<PaypalApi> { PaypalApi() }
     viewModelOf(::AuthViewModel)
     viewModelOf(::HomeGraphViewModel)
     viewModelOf(::ProfileViewModel)
