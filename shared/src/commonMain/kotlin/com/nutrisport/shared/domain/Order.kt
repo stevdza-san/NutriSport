@@ -10,5 +10,6 @@ data class Order(
     val id: String = Uuid.random().toHexString(),
     val customerId: String,
     val items: List<CartItem>,
-    val totalAmount: Double
+    val totalAmount: Double,
+    val token: String? = null
 )

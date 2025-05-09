@@ -8,6 +8,7 @@ import com.nutrisport.admin_panel.AdminPanelViewModel
 import com.nutrisport.details.DetailsViewModel
 import com.nutrisport.category_search.CategorySearchViewModel
 import com.nutrisport.checkout.CheckoutViewModel
+import com.nutrisport.payment_completed.PaymentViewModel
 import com.nutrisport.cart.CartViewModel
 import com.nutrisport.checkout.domain.PaypalApi
 import com.nutrisport.manage_product.ManageProductViewModel
@@ -43,6 +44,7 @@ val sharedModule = module {
     viewModelOf(::CartViewModel)
     viewModelOf(::CategorySearchViewModel)
     viewModelOf(::CheckoutViewModel)
+    viewModelOf(::PaymentViewModel)
 }
 
 expect val targetModule: Module

@@ -37,18 +37,15 @@ class MainActivity : ComponentActivity() {
         super.onNewIntent(intent)
         val uri = intent.data
 
-        println("INTENT TRIGGERED: $uri")
-
         val isSuccess = uri?.getQueryParameter("success")
         val isCancelled = uri?.getQueryParameter("cancel")
-
-        println("SUCCESS: $isSuccess")
-        println("CANCELLED: $isCancelled")
+        val token = uri?.getQueryParameter("token")
 
         intentHandler.navigateToPaymentCompleted(
             isSuccess = isSuccess?.toBooleanStrictOrNull(),
             error = if (isCancelled == "null") null
-            else "Payment has been canceled."
+            else "Payment has been canceled.",
+            token = token
         )
     }
 }

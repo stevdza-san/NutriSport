@@ -30,7 +30,6 @@ fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
 
     LaunchedEffect(navigateTo) {
         navigateTo?.let { paymentCompleted ->
-            println("NAVIGATING TO PAYMENT COMPLETED!")
             navController.navigate(paymentCompleted)
             intentHandler.resetNavigation()
         }
@@ -131,11 +130,7 @@ fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
             )
         }
         composable<Screen.PaymentCompleted> {
-            val isSuccess = it.toRoute<Screen.PaymentCompleted>().isSuccess
-            val error = it.toRoute<Screen.PaymentCompleted>().error
             PaymentCompleted(
-                isSuccess = isSuccess,
-                error = error,
                 navigateBack = {
                     navController.navigate(Screen.HomeGraph) {
                         launchSingleTop = true
