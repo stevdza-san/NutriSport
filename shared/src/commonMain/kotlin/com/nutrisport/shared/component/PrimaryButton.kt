@@ -20,6 +20,8 @@ import com.nutrisport.shared.ButtonDisabled
 import com.nutrisport.shared.ButtonPrimary
 import com.nutrisport.shared.ButtonSecondary
 import com.nutrisport.shared.FontSize
+import com.nutrisport.shared.IconPrimary
+import com.nutrisport.shared.Resources
 import com.nutrisport.shared.TextPrimary
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -51,7 +53,8 @@ fun PrimaryButton(
                 modifier = Modifier.size(14.dp),
                 painter = painterResource(icon),
                 contentDescription = "Button icon",
-                tint = Color.Unspecified
+                tint = if (icon == Resources.Image.PaypalLogo) Color.Unspecified
+                else IconPrimary
             )
         }
         Spacer(modifier = Modifier.width(12.dp))

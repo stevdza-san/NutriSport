@@ -19,6 +19,7 @@ import com.nutrisport.data.domain.AdminRepository
 import com.nutrisport.data.domain.CustomerRepository
 import com.nutrisport.data.domain.OrderRepository
 import com.nutrisport.data.domain.ProductRepository
+import com.nutrisport.shared.util.IntentHandler
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -30,6 +31,7 @@ val sharedModule = module {
     single<AdminRepository> { AdminRepositoryImpl() }
     single<ProductRepository> { ProductRepositoryImpl() }
     single<OrderRepository> { OrderRepositoryImpl(get()) }
+    single<IntentHandler> { IntentHandler() }
     single<PaypalApi> { PaypalApi() }
     viewModelOf(::AuthViewModel)
     viewModelOf(::HomeGraphViewModel)

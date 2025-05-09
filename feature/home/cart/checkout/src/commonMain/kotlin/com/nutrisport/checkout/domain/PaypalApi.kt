@@ -15,10 +15,13 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.encodeBase64
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import openWebBrowser
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -102,15 +105,33 @@ class PaypalApi {
             setBody(orderRequest)
         }
 
-        if (response == HttpStatusCode.OK) {
+        if (response.status == HttpStatusCode.OK) {
             val orderResponse = response.body<OrderResponse>()
-            val payerLink = orderResponse.links.firstOrNull { it.rel == "payer-action" }?.href ?: ""
+            val payerLink = orderResponse.links.firstOrNull { it.rel == "payer-action" }?.href
 
-            println("PAYPAL RESPONSE: $orderResponse")
-            println("PAYPAL PAYER LINK: $payerLink")
-            onSuccess()
+            withContext(Dispatchers.Main) {
+                handleUrl(
+                    url = payerLink,
+                    onSuccess = onSuccess,
+                    onError = onError
+                )
+            }
         } else {
             onError("Error while starting the checkout: ${response.status} - ${response.bodyAsText()}")
         }
+    }
+
+    private fun handleUrl(
+        url: String?,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit,
+    ) {
+        if (url == null) {
+            onError("Error while opening a web browser: URL is null")
+            return
+        }
+
+        openWebBrowser(url = url)
+        onSuccess()
     }
 }
