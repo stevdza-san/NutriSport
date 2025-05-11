@@ -50,6 +50,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>com.stevdza.san.nutrisport</string>
 				<string>com.googleusercontent.apps.868482317172-fbboh231hlh3s1h17g5q1v475g2ha5c4</string>
 			</array>
 			<key>CFBundleURLName</key>

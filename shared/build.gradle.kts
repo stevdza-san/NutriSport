@@ -46,6 +46,13 @@ kotlin {
 
             implementation(libs.kotlinx.serialization)
 
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.multiplatform.settings.make.observable)
+
             implementation(libs.coil3)
             implementation(libs.coil3.compose)
             implementation(libs.coil3.compose.core)

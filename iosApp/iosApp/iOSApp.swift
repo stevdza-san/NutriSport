@@ -1,6 +1,7 @@
 import SwiftUI
 import GoogleSignIn
 import Firebase
+import shared
 
 @main
 struct iOSApp: App {
@@ -10,9 +11,37 @@ struct iOSApp: App {
         WindowGroup {
             ContentView()
                 .ignoresSafeArea()
-                .onOpenURL(perform: { url in
-                GIDSignIn.sharedInstance.handle(url)
-            })
+                .onOpenURL { url in
+                    print("Received URL in onOpenURL: \(url)")
+                    
+                    if GIDSignIn.sharedInstance.handle(url) { return }
+                    
+                    guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+                          let queryItems = components.queryItems else { return }
+                    
+                    let success = queryItems.first(where: { $0.name == "success" })?.value == "true"
+                    let cancel = queryItems.first(where: { $0.name == "cancel" })?.value == "true"
+                    let token = queryItems.first(where: { $0.name == "token" })?.value
+                    
+                    print(
+                        """
+                            ✅ Success: \(success)
+                            ✅ Cancel: \(cancel)
+                            ✅ Token: \(token ?? "null")
+                        """
+                    )
+                    
+                    PreferencesRepository().savePayPalData(
+                        isSuccess: success ? KotlinBoolean(true) : nil,
+                        error: cancel ? "Payment canceled." : nil,
+                        token: token
+                    )
+                    //                    IntentHandlerHelper().navigateToPaymentCompleted(
+                    //                        isSuccess: success ? KotlinBoolean(true) : nil,
+                    //                        error: cancel ? "Payment canceled." : nil,
+                    //                        token: token
+                    //                    )
+                }
         }
     }
 }

@@ -21,17 +21,30 @@ import com.nutrisport.shared.navigation.Screen
 import com.nutrisport.shared.util.IntentHandler
 import org.koin.compose.koinInject
 import androidx.compose.runtime.getValue
+import com.nutrisport.shared.util.PreferencesRepository
 
 @Composable
 fun SetupNavGraph(startDestination: Screen = Screen.Auth) {
     val navController = rememberNavController()
-    val intentHandler = koinInject<IntentHandler>()
-    val navigateTo by intentHandler.navigateTo.collectAsState()
+//    val intentHandler = koinInject<IntentHandler>()
+//    val navigateTo by intentHandler.navigateTo.collectAsState()
+//
+//    LaunchedEffect(navigateTo) {
+//        navigateTo?.let { paymentCompleted ->
+//            navController.navigate(paymentCompleted)
+//            intentHandler.resetNavigation()
+//        }
+//    }
 
-    LaunchedEffect(navigateTo) {
-        navigateTo?.let { paymentCompleted ->
-            navController.navigate(paymentCompleted)
-            intentHandler.resetNavigation()
+    val preferencesData by PreferencesRepository.readPayPalDataFlow()
+        .collectAsState(initial = null)
+
+    LaunchedEffect(preferencesData) {
+        preferencesData?.let { paymentCompleted ->
+            if(paymentCompleted.token != null) {
+                navController.navigate(paymentCompleted)
+                PreferencesRepository.reset()
+            }
         }
     }
 
