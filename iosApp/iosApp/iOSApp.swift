@@ -2,6 +2,9 @@ import SwiftUI
 import GoogleSignIn
 import Firebase
 import shared
+import FirebaseCore
+import FirebaseMessaging
+import ComposeApp
 
 @main
 struct iOSApp: App {
@@ -32,15 +35,15 @@ struct iOSApp: App {
                     )
                     
                     PreferencesRepository().savePayPalData(
-                        isSuccess: success ? KotlinBoolean(true) : nil,
+                        isSuccess: success ? KotlinBoolean(value: true) : nil,
                         error: cancel ? "Payment canceled." : nil,
                         token: token
                     )
-                    //                    IntentHandlerHelper().navigateToPaymentCompleted(
-                    //                        isSuccess: success ? KotlinBoolean(true) : nil,
-                    //                        error: cancel ? "Payment canceled." : nil,
-                    //                        token: token
-                    //                    )
+                    // IntentHandlerHelper().navigateToPaymentCompleted(
+                    //   isSuccess: success ? KotlinBoolean(true) : nil,
+                    //   error: cancel ? "Payment canceled." : nil,
+                    //   token: token
+                    // )
                 }
         }
     }
@@ -52,6 +55,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         FirebaseApp.configure()
+        NotifierManager.shared.initialize(configuration: NotificationPlatformConfigurationIos(
+                    showPushNotification: true,
+                    askNotificationPermissionOnStart: true,
+                    notificationSoundName: nil
+                  )
+              )
         return true
     }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+           Messaging.messaging().apnsToken = deviceToken
+     }
 }
