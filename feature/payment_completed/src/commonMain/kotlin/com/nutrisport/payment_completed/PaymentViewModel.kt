@@ -41,23 +41,32 @@ class PaymentViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val totalAmount = customer.flatMapLatest { customerState ->
-        if (customerState.isSuccess()) {
-            val cartItems = customerState.getSuccessData().cart
-            val productIds = cartItems.map { it.productId }
+        when {
+            customerState.isSuccess() -> {
+                val cartItems = customerState.getSuccessData().cart
+                val productIds = cartItems.map { it.productId }
 
-            productRepository.readProductsByIdsFlow(productIds)
-                .map { products ->
-                    if (products.isSuccess()) {
-                        RequestState.Success(
-                            calculateTotalPrice(
-                                cartItems = cartItems,
-                                products = products.getSuccessData()
-                            )
-                        )
-                    } else RequestState.Success(0.0)
+                if (productIds.isEmpty()) {
+                    flowOf(RequestState.Success(0.0))
+                } else {
+                    productRepository.readProductsByIdsFlow(productIds)
+                        .map { products ->
+                            if (products.isSuccess()) {
+                                RequestState.Success(
+                                    calculateTotalPrice(
+                                        cartItems = cartItems,
+                                        products = products.getSuccessData()
+                                    )
+                                )
+                            } else {
+                                RequestState.Error(products.getErrorMessage())
+                            }
+                        }
                 }
-        } else if (customerState.isError()) flowOf(RequestState.Error(customerState.getErrorMessage()))
-        else flowOf(RequestState.Loading)
+            }
+            customerState.isError() -> flowOf(RequestState.Error(customerState.getErrorMessage()))
+            else -> flowOf(RequestState.Loading)
+        }
     }
 
     init {
