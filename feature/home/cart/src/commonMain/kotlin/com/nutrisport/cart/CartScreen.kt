@@ -19,6 +19,10 @@ import androidx.compose.ui.unit.dp
 import com.nutrisport.cart.component.CartItemCard
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.Surface
+import com.nutrisport.shared.SurfaceBrand
+import com.nutrisport.shared.SurfaceError
+import com.nutrisport.shared.TextPrimary
+import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.util.DisplayResult
@@ -33,7 +37,11 @@ fun CartScreen() {
     ContentWithMessageBar(
         contentBackgroundColor = Surface,
         messageBarState = messageBarState,
-        errorMaxLines = 2
+        errorMaxLines = 2,
+        errorContainerColor = SurfaceError,
+        errorContentColor = TextWhite,
+        successContainerColor = SurfaceBrand,
+        successContentColor = TextPrimary
     ) {
         cartItemsWithProducts.DisplayResult(
             onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },

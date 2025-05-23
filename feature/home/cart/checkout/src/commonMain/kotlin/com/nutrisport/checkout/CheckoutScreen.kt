@@ -24,7 +24,10 @@ import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.Surface
+import com.nutrisport.shared.SurfaceBrand
+import com.nutrisport.shared.SurfaceError
 import com.nutrisport.shared.TextPrimary
+import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.PrimaryButton
 import com.nutrisport.shared.component.ProfileForm
 import org.jetbrains.compose.resources.painterResource
@@ -84,14 +87,18 @@ fun CheckoutScreen(
         }
     ) { padding ->
         ContentWithMessageBar(
+            contentBackgroundColor = Surface,
             modifier = Modifier
                 .padding(
                     top = padding.calculateTopPadding(),
                     bottom = padding.calculateBottomPadding()
                 ),
-            contentBackgroundColor = Surface,
             messageBarState = messageBarState,
-            errorMaxLines = 2
+            errorMaxLines = 2,
+            errorContainerColor = SurfaceError,
+            errorContentColor = TextWhite,
+            successContainerColor = SurfaceBrand,
+            successContentColor = TextPrimary
         ) {
             Column(
                 modifier = Modifier

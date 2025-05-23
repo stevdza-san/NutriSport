@@ -56,11 +56,14 @@ import com.nutrisport.shared.FontSize
 import com.nutrisport.shared.IconPrimary
 import com.nutrisport.shared.Resources
 import com.nutrisport.shared.Surface
+import com.nutrisport.shared.SurfaceBrand
 import com.nutrisport.shared.SurfaceDarker
+import com.nutrisport.shared.SurfaceError
 import com.nutrisport.shared.SurfaceLighter
 import com.nutrisport.shared.SurfaceSecondary
 import com.nutrisport.shared.TextPrimary
 import com.nutrisport.shared.TextSecondary
+import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.AlertTextField
 import com.nutrisport.shared.component.CustomTextField
 import com.nutrisport.shared.component.ErrorCard
@@ -196,7 +199,11 @@ fun ManageProductScreen(
                 ),
             contentBackgroundColor = Surface,
             messageBarState = messageBarState,
-            errorMaxLines = 2
+            errorMaxLines = 2,
+            errorContainerColor = SurfaceError,
+            errorContentColor = TextWhite,
+            successContainerColor = SurfaceBrand,
+            successContentColor = TextPrimary
         ) {
             Column(
                 modifier = Modifier

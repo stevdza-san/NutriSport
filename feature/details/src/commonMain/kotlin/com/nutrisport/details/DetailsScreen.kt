@@ -53,7 +53,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.style.TextOverflow
 import com.nutrisport.details.component.FlavorChip
 import com.nutrisport.shared.RobotoCondensedFont
+import com.nutrisport.shared.SurfaceBrand
+import com.nutrisport.shared.SurfaceError
 import com.nutrisport.shared.SurfaceLighter
+import com.nutrisport.shared.TextWhite
 import com.nutrisport.shared.component.InfoCard
 import com.nutrisport.shared.component.LoadingCard
 import com.nutrisport.shared.component.PrimaryButton
@@ -114,14 +117,18 @@ fun DetailsScreen(navigateBack: () -> Unit) {
             onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
             onSuccess = { selectedProduct ->
                 ContentWithMessageBar(
+                    contentBackgroundColor = Surface,
                     modifier = Modifier
                         .padding(
                             top = padding.calculateTopPadding(),
                             bottom = padding.calculateBottomPadding()
                         ),
-                    contentBackgroundColor = Surface,
                     messageBarState = messageBarState,
-                    errorMaxLines = 2
+                    errorMaxLines = 2,
+                    errorContainerColor = SurfaceError,
+                    errorContentColor = TextWhite,
+                    successContainerColor = SurfaceBrand,
+                    successContentColor = TextPrimary
                 ) {
                     Column {
                         Column(
