@@ -55,7 +55,7 @@ fun CartScreen() {
                     ) {
                         items(
                             items = data,
-                            key = { data.hashCode().toString() }
+                            key = { it.first.id }
                         ) { pair ->
                             CartItemCard(
                                 cartItem = pair.first,
