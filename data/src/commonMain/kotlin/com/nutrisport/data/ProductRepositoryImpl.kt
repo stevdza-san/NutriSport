@@ -4,6 +4,7 @@ import com.nutrisport.data.domain.ProductRepository
 import com.nutrisport.shared.domain.Product
 import com.nutrisport.shared.domain.ProductCategory
 import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.threadSleep
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
@@ -12,6 +13,10 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 
 class ProductRepositoryImpl : ProductRepository {
+    init {
+        println("Initializing....ProductRepository")
+        threadSleep(2000)
+    }
     override fun getCurrentUserId() = Firebase.auth.currentUser?.uid
 
     override fun readDiscountedProducts(): Flow<RequestState<List<Product>>> = channelFlow {

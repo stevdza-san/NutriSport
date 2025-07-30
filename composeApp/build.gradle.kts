@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.google.services)
+    id("io.kotzilla.kotzilla-plugin")
 }
 
 kotlin {
@@ -14,7 +15,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -26,7 +27,7 @@ kotlin {
             export(libs.kmp.notifier)
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
@@ -50,6 +51,9 @@ kotlin {
             implementation(libs.koin.compose)
 
             api(libs.kmp.notifier)
+
+//            implementation("io.kotzilla:kotzilla-sdk:1.2.0-Beta3")
+            implementation("io.kotzilla:kotzilla-sdk-ktor3:1.2.0-Beta1")
 
             implementation(project(path = ":navigation"))
             implementation(project(path = ":shared"))

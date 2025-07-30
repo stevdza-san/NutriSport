@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.nutrisport.data.domain.CustomerRepository
 import com.nutrisport.data.domain.ProductRepository
 import com.nutrisport.shared.util.RequestState
+import com.nutrisport.shared.util.threadSleep
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
@@ -20,6 +21,11 @@ class HomeGraphViewModel(
     private val customerRepository: CustomerRepository,
     private val productRepository: ProductRepository
 ) : ViewModel() {
+    init {
+        println("Initializing....ViewModel")
+        threadSleep(2000)
+    }
+
     val customer = customerRepository.readCustomerFlow()
         .stateIn(
             scope = viewModelScope,

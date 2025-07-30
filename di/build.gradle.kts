@@ -40,6 +40,9 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
+            // implementation("io.kotzilla:kotzilla-sdk:1.2.0-Beta3")
+            implementation("io.kotzilla:kotzilla-sdk-ktor3:1.2.0-Beta1")
+
             implementation(project(":feature:auth"))
             implementation(project(":feature:details"))
             implementation(project(":feature:home"))
