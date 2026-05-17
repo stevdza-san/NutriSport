@@ -30,18 +30,17 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.splash.screen)
             implementation(libs.koin.android)
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.runtime)
+            implementation(libs.foundation)
+            implementation(libs.material3)
+            implementation(libs.ui)
+            implementation(libs.components.resources)
+            implementation(libs.ui.tooling.preview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -53,12 +52,12 @@ kotlin {
             api(libs.kmp.notifier)
 
 //            implementation("io.kotzilla:kotzilla-sdk:1.2.0-Beta3")
-            implementation("io.kotzilla:kotzilla-sdk-ktor3:1.2.0-Beta1")
+            implementation("io.kotzilla:kotzilla-sdk-ktor3:1.3.1")
 
-            implementation(project(path = ":navigation"))
-            implementation(project(path = ":shared"))
-            implementation(project(path = ":di"))
-            implementation(project(path = ":data"))
+            api(project(path = ":navigation"))
+            api(project(path = ":shared"))
+            api(project(path = ":di"))
+            api(project(path = ":data"))
         }
     }
 }

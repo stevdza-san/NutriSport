@@ -1,7 +1,6 @@
 import SwiftUI
 import GoogleSignIn
 import Firebase
-import shared
 import FirebaseCore
 import FirebaseMessaging
 import ComposeApp
@@ -34,7 +33,7 @@ struct iOSApp: App {
                         """
                     )
                     
-                    PreferencesRepository().savePayPalData(
+                    MainViewControllerKt.savePayPalData(
                         isSuccess: success ? KotlinBoolean(value: true) : nil,
                         error: cancel ? "Payment canceled." : nil,
                         token: token

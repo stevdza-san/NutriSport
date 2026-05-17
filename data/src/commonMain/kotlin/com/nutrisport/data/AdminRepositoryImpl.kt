@@ -181,7 +181,7 @@ class AdminRepositoryImpl : AdminRepository {
                     .get()
                 if (existingProduct.exists) {
                     productCollection.document(productId)
-                        .update("thumbnail" to downloadUrl)
+                        .updateFields { "thumbnail" to downloadUrl }
                     onSuccess()
                 } else {
                     onError("Selected Product not found.")

@@ -181,7 +181,7 @@ fun ManageProductScreen(
                         }
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Surface,
                     scrolledContainerColor = Surface,
                     navigationIconContentColor = IconPrimary,

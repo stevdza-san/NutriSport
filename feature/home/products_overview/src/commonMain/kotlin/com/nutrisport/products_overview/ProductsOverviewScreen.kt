@@ -74,10 +74,10 @@ fun ProductsOverviewScreen(
                         ) {
                             itemsIndexed(
                                 items = products
-                                    .filter { it.isNew == true }
+                                    .filter { it.isNew }
                                     .sortedBy { it.createdAt }
                                     .take(6),
-                                key = { index, item -> item.id }
+                                key = { _, item -> item.id }
                             ) { index, product ->
                                 val isLarge = index == centeredIndex
                                 val animatedScale by animateFloatAsState(

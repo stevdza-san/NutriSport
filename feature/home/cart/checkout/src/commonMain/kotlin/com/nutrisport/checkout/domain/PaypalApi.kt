@@ -5,6 +5,7 @@ import com.nutrisport.shared.Constants.PAYPAL_AUTH_KEY
 import com.nutrisport.shared.Constants.PAYPAL_CHECKOUT_ENDPOINT
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
@@ -26,16 +27,7 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class PaypalApi {
-    private val client = HttpClient {
-        install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                    encodeDefaults = true
-                }
-            )
-        }
-    }
+    private val client = createPayPalHttpClient()
 
     private val _accessToken = MutableStateFlow("")
     val accessToken: StateFlow<String> = _accessToken.asStateFlow()
@@ -45,25 +37,7 @@ class PaypalApi {
         onError: (String) -> Unit,
     ) {
         try {
-            val authKey = PAYPAL_AUTH_KEY.encodeBase64()
-            val response = client.post(urlString = PAYPAL_AUTH_ENDPOINT) {
-                headers {
-                    append(HttpHeaders.Authorization, "Basic $authKey")
-                    append(
-                        HttpHeaders.ContentType,
-                        ContentType.Application.FormUrlEncoded.toString()
-                    )
-                }
-                setBody("grant_type=client_credentials")
-            }
-
-            if (response.status == HttpStatusCode.OK) {
-                val tokenResponse = response.body<PaypalTokenResponse>()
-                _accessToken.value = tokenResponse.accessToken
-                onSuccess(tokenResponse.accessToken)
-            } else {
-                onError("Error while fetching an Access Token: ${response.status} -${response.bodyAsText()}")
-            }
+            onSuccess(requestAccessToken())
         } catch (e: Exception) {
             onError("Error while fetching an Access Token: ${e.message}")
         }
@@ -77,48 +51,70 @@ class PaypalApi {
         onSuccess: () -> Unit,
         onError: (String) -> Unit,
     ) {
-        if (_accessToken.value.isEmpty()) {
-            onError("Error while starting the checkout: Access Token is empty.")
-            return
-        }
-
-        val uniqueId = Uuid.random().toHexString()
-        val orderRequest = OrderRequest(
-            purchaseUnits = listOf(
-                PurchaseUnit(
-                    referenceId = uniqueId,
-                    amount = amount,
-                    shipping = Shipping(
-                        name = Name(fullName = fullName),
-                        address = shippingAddress
+        try {
+            val token = _accessToken.value.ifBlank { requestAccessToken() }
+            val uniqueId = Uuid.random().toHexString()
+            val orderRequest = OrderRequest(
+                purchaseUnits = listOf(
+                    PurchaseUnit(
+                        referenceId = uniqueId,
+                        amount = amount,
+                        shipping = Shipping(
+                            name = Name(fullName = fullName),
+                            address = shippingAddress
+                        )
                     )
                 )
             )
-        )
 
-        val response = client.post(urlString = PAYPAL_CHECKOUT_ENDPOINT) {
-            headers {
-                append(HttpHeaders.Authorization, "Bearer ${_accessToken.value}")
-                append(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                append("PayPal-Request-Id", uniqueId)
+            val response = client.post(urlString = PAYPAL_CHECKOUT_ENDPOINT) {
+                headers {
+                    append(HttpHeaders.Authorization, "Bearer $token")
+                    append(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    append("PayPal-Request-Id", uniqueId)
+                }
+                setBody(orderRequest)
             }
-            setBody(orderRequest)
+
+            if (response.status == HttpStatusCode.OK || response.status == HttpStatusCode.Created) {
+                val orderResponse = response.body<OrderResponse>()
+                val payerLink = orderResponse.links.firstOrNull { it.rel == "payer-action" }?.href
+
+                withContext(Dispatchers.Main) {
+                    handleUrl(
+                        url = payerLink,
+                        onSuccess = onSuccess,
+                        onError = onError
+                    )
+                }
+            } else {
+                onError("Error while starting the checkout: ${response.status} - ${response.bodyAsText()}")
+            }
+        } catch (e: Exception) {
+            onError("Error while starting the checkout: ${e.message}")
         }
+    }
 
-        if (response.status == HttpStatusCode.OK) {
-            val orderResponse = response.body<OrderResponse>()
-            val payerLink = orderResponse.links.firstOrNull { it.rel == "payer-action" }?.href
-
-            withContext(Dispatchers.Main) {
-                handleUrl(
-                    url = payerLink,
-                    onSuccess = onSuccess,
-                    onError = onError
+    private suspend fun requestAccessToken(): String {
+        val authKey = PAYPAL_AUTH_KEY.encodeBase64()
+        val response = client.post(urlString = PAYPAL_AUTH_ENDPOINT) {
+            headers {
+                append(HttpHeaders.Authorization, "Basic $authKey")
+                append(
+                    HttpHeaders.ContentType,
+                    ContentType.Application.FormUrlEncoded.toString()
                 )
             }
-        } else {
-            onError("Error while starting the checkout: ${response.status} - ${response.bodyAsText()}")
+            setBody("grant_type=client_credentials")
         }
+
+        if (response.status != HttpStatusCode.OK) {
+            throw IllegalStateException("${response.status} - ${response.bodyAsText()}")
+        }
+
+        val tokenResponse = response.body<PaypalTokenResponse>()
+        _accessToken.value = tokenResponse.accessToken
+        return tokenResponse.accessToken
     }
 
     private fun handleUrl(
@@ -133,5 +129,19 @@ class PaypalApi {
 
         openWebBrowser(url = url)
         onSuccess()
+    }
+}
+
+// Keep engine selection platform-specific so iOS uses Darwin for TLS requests.
+internal expect fun createPayPalHttpClient(): HttpClient
+
+internal fun HttpClientConfig<*>.configurePayPalHttpClient() {
+    install(ContentNegotiation) {
+        json(
+            Json {
+                ignoreUnknownKeys = true
+                encodeDefaults = true
+            }
+        )
     }
 }

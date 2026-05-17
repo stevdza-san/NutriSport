@@ -111,14 +111,14 @@ class CustomerRepositoryImpl : CustomerRepository {
                 if (existingCustomer.exists) {
                     customerCollection
                         .document(customer.id)
-                        .update(
-                            "firstName" to customer.firstName,
-                            "lastName" to customer.lastName,
-                            "city" to customer.city,
-                            "postalCode" to customer.postalCode,
-                            "address" to customer.address,
+                        .updateFields {
+                            "firstName" to customer.firstName
+                            "lastName" to customer.lastName
+                            "city" to customer.city
+                            "postalCode" to customer.postalCode
+                            "address" to customer.address
                             "phoneNumber" to customer.phoneNumber
-                        )
+                        }
                     onSuccess()
                 } else {
                     onError("Customer not found.")
